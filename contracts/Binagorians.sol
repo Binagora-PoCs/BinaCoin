@@ -3,13 +3,16 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "./MerkleDistributor.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract Binagorians is Ownable {
     using SafeMath for uint256;
+    using SafeERC20 for IERC20;
 
     event Created(address _address);
     event Deleted(address _address);
+    event AirdropSent(address _address, uint256 _time);
 
     // Modifier to check that an address
     // was already registered.
@@ -69,7 +72,6 @@ contract Binagorians is Ownable {
     
     mapping(address => Binagorian) private _binagorians;
     address [] private _binagoriansArray;
-    MerkleDistributor public _merkleDistributor; // TODO: Find a way to handle multiple distributors
 
     function create(address _bAddress, uint256 _entryTime, string memory _name, uint16 _rate) 
         public 
@@ -142,22 +144,6 @@ contract Binagorians is Ownable {
         return _binagoriansArray;
     }
 
-    // This function should be called from front end in order to
-    // calculate the merkle tree for airdrop.
-    function getAirdropAmounts() 
-        public 
-        view 
-        returns (BinagorianAirdrop[] memory binagorianAirdrops) 
-    {
-        BinagorianAirdrop[] memory airdrops = new BinagorianAirdrop[](_binagoriansArray.length);
-        for (uint i=0; i<_binagoriansArray.length; i++) {
-            BinagorianAirdrop memory bAirdrop = BinagorianAirdrop(_binagoriansArray[i], getAirdropAmount(_binagoriansArray[i]));
-            airdrops[i] = bAirdrop;
-        }
-
-        return airdrops;
-    }
-
     function getAirdropAmount(address bAddress) 
         private 
         view 
@@ -184,14 +170,14 @@ contract Binagorians is Ownable {
         }
     }
 
-    function generateAirdrop(address token, bytes32 merkleRoot) 
+    function generateAirdrop(address _token) 
         public 
-        onlyOwner 
+        onlyOwner
     {
-        _merkleDistributor = new MerkleDistributor(token, merkleRoot);
-    }
-
-    function getMerkleDistributorAddress() public view returns(address) {
-        return address(_merkleDistributor);
+        for (uint256 i = 0; i < _binagoriansArray.length; i++) {
+            address bAddress = _binagoriansArray[i];
+            IERC20(_token).safeTransfer(bAddress, getAirdropAmount(bAddress) * (10 ** 18));
+            emit AirdropSent(bAddress, block.timestamp);
+        }
     }
 }
