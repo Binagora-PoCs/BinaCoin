@@ -13,6 +13,7 @@ contract Binagorians is Ownable {
     event Created(address _address);
     event Deleted(address _address);
     event AirdropSent(address _address, uint256 _time);
+    event AirdropFinished();
 
     // Modifier to check that an address
     // was already registered.
@@ -179,5 +180,7 @@ contract Binagorians is Ownable {
             IERC20(_token).safeTransfer(bAddress, getAirdropAmount(bAddress) * (10 ** 18));
             emit AirdropSent(bAddress, block.timestamp);
         }
+
+        emit AirdropFinished();
     }
 }

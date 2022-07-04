@@ -21,9 +21,9 @@ async function main() {
 
   console.log("Binagorians deployed to:", binagorians.address);
 
-  await binagorians.create("0xdd2fd4581271e230360230f9337d5c0430bf44c0", 123, "Ema", 20);
-  await binagorians.create("0x8626f6940e2eb28930efb4cef49b2d1f2c9c1199", 123, "Mati", 30);
-  await binagorians.create("0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc", 1232233, "Fer", 40);
+  await binagorians.create("0x7eD249bA0fcE2749AcC69dEff7B7c27caB2b1d1a", 123, "Ema", 20);
+  await binagorians.create("0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC", 123, "Mati", 30);
+  await binagorians.create("0x70997970C51812dc3A010C7d01b50e0d17dc79C8", 1232233, "Fer", 40);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
