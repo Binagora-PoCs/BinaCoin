@@ -7,13 +7,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Binacoin is ERC20, ERC20Burnable, Ownable {
     event Withdraw(address indexed _from, uint _value);
-    event Minted(address _to, uint256 _amount);
 
     constructor() ERC20("Binacoin", "BINA") {}
 
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
-        emit Minted(to, amount);
     }
 
     function _afterTokenTransfer(

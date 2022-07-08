@@ -10,10 +10,7 @@ contract Binagorians is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
-    event Created(address _address);
-    event Deleted(address _address);
     event AirdropSent(address _address, uint256 _time);
-    event AirdropFinished();
 
     // Modifier to check that an address
     // was already registered.
@@ -82,7 +79,6 @@ contract Binagorians is Ownable {
     {
         _binagoriansArray.push(_bAddress);
         _binagorians[_bAddress] = Binagorian(_name, _entryTime, _rate, _binagoriansArray.length - 1);
-        emit Created(_bAddress);
     }
 
     // Move the last element to the deleted spot.
@@ -102,7 +98,6 @@ contract Binagorians is Ownable {
         _binagoriansArray[index] = lastBinagorianAddress;
         _binagoriansArray.pop();
         delete _binagorians[_bAddress];
-        emit Deleted(_bAddress);
     }
 
     function updateRate(address _bAddress, uint16 _newRate) 
@@ -180,7 +175,5 @@ contract Binagorians is Ownable {
             IERC20(_token).safeTransfer(bAddress, getAirdropAmount(bAddress) * (10 ** 18));
             emit AirdropSent(bAddress, block.timestamp);
         }
-
-        emit AirdropFinished();
     }
 }
