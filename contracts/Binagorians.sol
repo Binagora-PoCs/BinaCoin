@@ -63,11 +63,6 @@ contract Binagorians is Ownable {
         uint256 index;
     }
 
-    struct BinagorianAirdrop {
-        address addr;
-        uint256 amount;
-    }
-    
     mapping(address => Binagorian) private _binagorians;
     address [] private _binagoriansArray;
 

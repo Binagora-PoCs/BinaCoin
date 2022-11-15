@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Binacoin is ERC20, ERC20Burnable, Ownable {
-    event Withdraw(address indexed _from, uint _value);
+    event Withdraw(address indexed _from, uint256 _value, uint256 _date);
 
     constructor() ERC20("Binacoin", "BINA") {}
 
@@ -24,11 +24,7 @@ contract Binacoin is ERC20, ERC20Burnable, Ownable {
         
         if (to == address(0)) {
             // Here the binagorian should get the payment of the burned tokens
-            emit Withdraw(from, amount);
+            emit Withdraw(from, amount, block.timestamp);
         }
-    }
-
-    function lastTransactions(address bAddress) public view returns (string memory name, uint256 entryTime, uint16 rate) {
-        // TODO: add code here    
     }
 }
