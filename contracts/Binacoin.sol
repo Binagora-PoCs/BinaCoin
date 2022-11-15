@@ -10,6 +10,13 @@ contract Binacoin is ERC20, ERC20Burnable, Ownable {
 
     constructor() ERC20("Binacoin", "BINA") {}
 
+    struct BurnPtoData {
+        uint256 date;
+        uint256 amount;
+    }
+
+    mapping(address => BurnPtoData []) private _ptoBurns;
+
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
     }
@@ -24,7 +31,25 @@ contract Binacoin is ERC20, ERC20Burnable, Ownable {
         
         if (to == address(0)) {
             // Here the binagorian should get the payment of the burned tokens
+            _ptoBurns[from].push(BurnPtoData(block.timestamp, amount));
             emit Withdraw(from, amount, block.timestamp);
         }
+    }
+
+    function getBurnsByAddress(address addr) 
+        public 
+        onlyOwner 
+        view 
+        returns (BurnPtoData [] memory) 
+    {
+        return _ptoBurns[addr];
+    }
+
+    function getMyBurns() 
+        public 
+        view 
+        returns (BurnPtoData [] memory) 
+    {
+        return _ptoBurns[msg.sender];
     }
 }
